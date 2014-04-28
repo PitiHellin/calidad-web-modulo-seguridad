@@ -57,6 +57,17 @@ class LoginForm extends CFormModel
 	}
 
 	/**
+	 * Sets the user as reauthenticated
+	 */
+	public function setReauthenticated()
+	{
+		if(!$this->hasErrors())
+		{
+			Yii::app()->user->setLastReauthenticationTime(time());
+		}
+	}
+
+	/**
 	 * Logs in the user using the given username and password in the model.
 	 * @return boolean whether login is successful
 	 */

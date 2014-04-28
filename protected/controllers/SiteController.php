@@ -2,6 +2,39 @@
 
 class SiteController extends Controller
 {
+
+	/**
+	 * @return array action filters
+	 */
+	public function filters()
+	{
+		return array(
+			'accessControl',
+		);
+	}
+
+	/**
+	 * Specifies the access control rules.
+	 * This method is used by the 'accessControl' filter.
+	 * @return array access control rules
+	 */
+	public function accessRules()
+	{
+		return array(
+			array('allow',  // allow all users to perform 'index' and 'view' actions
+				'actions'=>array('error','contact', 'index', 'login', 'captcha', 'page'),
+				'users'=>array('*'),
+			),
+			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+				'actions'=>array('reauth'),
+				'users'=>array('@'),
+			),
+			array('deny',  // deny all users
+				'users'=>array('*'),
+			),
+		);
+	}
+
 	/**
 	 * Declares class-based actions.
 	 */
@@ -91,6 +124,42 @@ class SiteController extends Controller
 		}
 		// display the login form
 		$this->render('index',array('model'=>$model));
+	}
+
+	/**
+	 * Displays the login page
+	 */
+	public function actionReauth()
+	{
+
+		$user = User::model()->findByPk(Yii::app()->user->getState('user_id'));
+
+		// if(!$user){
+		// 	$this->redirect('index');
+		// }
+
+		$model=new LoginForm;
+		$model->username = $user->user;
+
+		// if it is ajax validation request
+		if(isset($_POST['ajax']) && $_POST['ajax']==='login-form')
+		{
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+
+		// collect user input data
+		if(isset($_POST['LoginForm']))
+		{
+			$model->attributes=$_POST['LoginForm'];
+			$model->username = $user->user;
+			if($model->validate())
+				$model->setReauthenticated();
+				$this->redirect(Yii::app()->user->returnUrl);
+				return;
+		}
+		// display the login form
+		$this->render('reauth', array('model'=>$model));
 	}
 
 	public function actionLogin(){

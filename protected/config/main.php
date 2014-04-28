@@ -53,6 +53,8 @@ return array(
 		'user'=>array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
+			'class' => 'WebUser',
+			'reauthTimeout' => 60,
 		),
 		// uncomment the following to enable URLs in path-format
 		
