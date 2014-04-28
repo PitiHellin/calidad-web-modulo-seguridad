@@ -20,12 +20,7 @@ class UserIdentity extends CUserIdentity
 		//$this->username //usuario enviado desde el login
 		//$this->password //Contraseña enviada desde el login
 		
-		$user = User::model()->find( array(
-			'condition' => 'user = :user',
-			'params' => array(
-				':user' => $this->username,
-			),
-		) ); //SELECT * FROM usuario WHERE usuario = $this->username LIMIT 1
+		$user = $this->findUser('User', 'user');
 		
 		//var_dump($user);
 		//exit();
@@ -45,5 +40,18 @@ class UserIdentity extends CUserIdentity
 
 		}
 		return !$this->errorCode;
+	}
+
+	private function findUser($userModel, $usernameField){
+		if($userModel === null){
+			return null;
+		}
+		
+		return $userModel::model()->find( array(
+			'condition' => 'LOWER('.$usernameField.') = LOWER(:user)',
+			'params' => array(
+				':user' => $this->username,
+			),
+		) );
 	}
 }
