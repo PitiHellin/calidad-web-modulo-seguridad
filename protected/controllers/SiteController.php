@@ -26,7 +26,7 @@ class SiteController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('reauth'),
+				'actions'=>array('reauth', 'logout'),
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
