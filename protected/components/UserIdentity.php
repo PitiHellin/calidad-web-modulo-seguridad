@@ -17,17 +17,33 @@ class UserIdentity extends CUserIdentity
 	 */
 	public function authenticate()
 	{
-		$users=array(
-			// username => password
-			'demo'=>'demo',
-			'admin'=>'admin',
-		);
-		if(!isset($users[$this->username]))
+		//$this->username //usuario enviado desde el login
+		//$this->password //Contraseña enviada desde el login
+		
+		$user = User::model()->find( array(
+			'condition' => 'user = :user',
+			'params' => array(
+				':user' => $this->username,
+			),
+		) ); //SELECT * FROM usuario WHERE usuario = $this->username LIMIT 1
+		
+		//var_dump($user);
+		//exit();
+
+		if( $user === null )
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
-		elseif($users[$this->username]!==$this->password)
+		elseif( crypt( $this->password , $user->password ) !== $user->password )
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
-		else
+		else{
 			$this->errorCode=self::ERROR_NONE;
+
+			/*En las vistas tendremos disponible type usted puede setear lo que requiera */
+			$this->setState('user_id', $user->id);
+			$this->setState('type', $user->type);
+			$this->setState('user' , $user->user);
+			$this->username = $user->type;
+
+		}
 		return !$this->errorCode;
 	}
 }

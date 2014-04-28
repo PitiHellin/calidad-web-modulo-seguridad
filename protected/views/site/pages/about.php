@@ -6,7 +6,9 @@ $this->breadcrumbs=array(
 	'About',
 );
 ?>
-<h1>About</h1>
+<h1>Acerca de</h1>
 
-<p>This is a "static" page. You may change the content of this page
-by updating the file <code><?php echo __FILE__; ?></code>.</p>
+<p>El sistema de Gestion de Reportes (SGR) fue diseñado para realizar de manera mas practica la administracion de Reportes de los usuarios
+de la Facultad de Matematicas</p>
+<p>Este proyecto fue realizado por estudiantes de la Universidad Autonoma de Yucatan, Facultad de Matematicas</p>
+ 

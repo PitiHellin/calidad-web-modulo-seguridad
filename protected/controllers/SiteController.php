@@ -21,16 +21,6 @@ class SiteController extends Controller
 		);
 	}
 
-	/**
-	 * This is the default 'index' action that is invoked
-	 * when an action is not explicitly requested by users.
-	 */
-	public function actionIndex()
-	{
-		// renders the view file 'protected/views/site/index.php'
-		// using the default layout 'protected/views/layouts/main.php'
-		$this->render('index');
-	}
 
 	/**
 	 * This is the action to handle external exceptions.
@@ -75,8 +65,13 @@ class SiteController extends Controller
 	/**
 	 * Displays the login page
 	 */
-	public function actionLogin()
+	public function actionIndex()
 	{
+
+		if(isset(Yii::app()->user->id)){
+			$this->redirect(Yii::app()->homeUrl . 'perfil/view/' . Yii::app()->user->user_id );
+		}
+
 		$model=new LoginForm;
 
 		// if it is ajax validation request
@@ -92,10 +87,14 @@ class SiteController extends Controller
 			$model->attributes=$_POST['LoginForm'];
 			// validate user input and redirect to the previous page if valid
 			if($model->validate() && $model->login())
-				$this->redirect(Yii::app()->user->returnUrl);
+				$this->redirect(Yii::app()->homeUrl . 'perfil/view/' . Yii::app()->user->user_id );
 		}
 		// display the login form
-		$this->render('login',array('model'=>$model));
+		$this->render('index',array('model'=>$model));
+	}
+
+	public function actionLogin(){
+		$this->actionIndex();
 	}
 
 	/**

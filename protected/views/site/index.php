@@ -4,17 +4,51 @@
 $this->pageTitle=Yii::app()->name;
 ?>
 
-<h1>Welcome to <i><?php echo CHtml::encode(Yii::app()->name); ?></i></h1>
+<div class="clearfix">
+	<?php $form=$this->beginWidget('CActiveForm', array(
+			'id'=>'login-form',
+			'enableClientValidation'=>true,
+			'clientOptions'=>array(
+				'validateOnSubmit'=>true,
+			),
+		)); 
+	?>
 
-<p>Congratulations! You have successfully created your Yii application.</p>
+	<div class="pull-left">
+		<?php echo CHtml::image(Yii::app()->baseUrl.'/images/organiza.jpg');?>
+	</div>
 
-<p>You may change the content of this page by modifying the following two files:</p>
-<ul>
-	<li>View file: <code><?php echo __FILE__; ?></code></li>
-	<li>Layout file: <code><?php echo $this->getLayoutFile('main'); ?></code></li>
-</ul>
+	<div class="pull-right">
 
-<p>For more details on how to further develop this application, please read
-the <a href="http://www.yiiframework.com/doc/">documentation</a>.
-Feel free to ask in the <a href="http://www.yiiframework.com/forum/">forum</a>,
-should you have any questions.</p>
+		<div class="middle">
+			<?php
+				$errors = $model->getErrors();
+			
+				foreach ($errors as $er) {
+					foreach ($er as $e) {
+						$this->widget('bootstrap.widgets.TbLabel', array( 'type' => 'important' , 'label' => $e ));
+						echo "<br>";
+					}
+				}
+			?>
+		</div>
+		<br>
+
+		<div class="contenedor">
+			<div>
+				<?php echo $form->textField($model,'username' , array( 'placeholder' => 'Usuario' ) ); ?>
+			</div>
+
+			<div>
+				<?php echo $form->passwordField($model,'password' , array( 'placeholder' => 'Contraseña' ) ); ?>
+			</div>
+
+			<div align="center">
+				<button	class="button" type="submit">Login</button>
+			</div>
+		</div>
+
+	</div>
+
+	<?php $this->endWidget(); ?>
+</div>
