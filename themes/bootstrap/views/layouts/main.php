@@ -12,7 +12,6 @@
 			<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css" media="screen, projection" />
  			<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
  			<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style.css" />
-		
 
  		<meta charset="<?php echo Yii::app()->charset;?>">
 		
@@ -111,6 +110,67 @@
  			</footer>
  
 		</div>
+		<?php if(!Yii::app()->user->isGuest): ?>
+			<div id="dialog" title="Your session is about to expire!">
+					<p>
+						<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
+						You will be logged off in <span id="dialog-countdown" style="font-weight:bold"></span> seconds.
+					</p>
+				
+					<p>Do you want to continue your session?</p>
+			</div>
+
+			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js" type="text/javascript"></script>
+			<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js" type="text/javascript"></script>
+			<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.idletimeout.js"></script>
+			<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.idletimer.js"></script>
+			
+			<script>
+			$("#dialog").dialog({
+				autoOpen: false,
+				modal: true,
+				width: 400,
+				height: 200,
+				closeOnEscape: false,
+				draggable: false,
+				resizable: false,
+				buttons: {
+					'Si,seguir trabajando': function(){
+						$(this).dialog('close');
+					},
+					'No, cerarr sesión': function(){
+						// fire whatever the configured onTimeout callback is.
+						// using .call(this) keeps the default behavior of "this" being the warning
+						// element (the dialog in this case) inside the callback.
+						$.idleTimeout.options.onTimeout.call(this);
+					}
+				}
+			});
+
+				var logout = '<?php echo Yii::app()->request->baseUrl; ?>/site/logout';
+				 
+				 var $countdown = $("#dialog-countdown");
+
+					// start the idle timer plugin
+					$.idleTimeout('#dialog', 'div.ui-dialog-buttonpane button:first', {
+						idleAfter: 5,
+						pollingInterval: 2,
+						keepAliveURL: 'keepalive.php',
+						serverResponseEquals: 'OK',
+						onTimeout: function(){
+							location.href= logout;
+						},
+						onIdle: function(){
+							$(this).dialog("open");
+						},
+						onCountdown: function(counter){
+							$countdown.html(counter); // update the counter
+						}
+					});
+					
+			</script>
+
+		<?php endif; ?>
 
 	</body>
 </html>
