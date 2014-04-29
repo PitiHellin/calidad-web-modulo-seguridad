@@ -27,8 +27,12 @@ class LoginForm extends CFormModel
 			array('rememberMe', 'boolean'),
 			// password needs to be authenticated
 			array('password', 'authenticate'),
+
 		);
+
 	}
+
+
 
 	/**
 	 * Declares attribute labels.
